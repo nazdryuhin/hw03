@@ -1,0 +1,29 @@
+language: cpp
+before_script:
+- sudo apt install libgtest-dev cmake -y
+- echo "deb http://archive.ubuntu.com/ubuntu xenial main universe" | sudo tee -a /etc/apt/sources.list
+- cd /usr/src/gtest
+- sudo cmake .
+- sudo cmake --build .
+- sudo cp *.a /usr/lib
+- cd ${TRAVIS_BUILD_DIR}
+- sudo apt-get update -qq
+before_install:
+    #C++17
+    - sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test
+    - sudo apt-get update -qq
+# Install dependencies
+install: 
+  # C++17
+  - sudo apt-get install -qq g++-6
+  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-6 90
+script:
+- cmake .
+- cmake --build .
+  #- cmake --build . --target test
+- cmake --build . --target package
+deploy:
+  provider: script
+  skip_cleanup: true
+  script:
+  - curl -T allocator-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb -unazdryuhin:$BINTRAY_API_KEY "https://api.bintray.com/content/nazdryuhin/HomeWork/hw03/$TRAVIS_BUILD_NUMBER/allocator-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=trusty;deb_component=main;deb_architecture=amd64;publish=1"
