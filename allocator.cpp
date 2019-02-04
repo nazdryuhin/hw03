@@ -7,8 +7,8 @@ int main() {
     for(int i = 1; i < 10; ++i) {
         factorial[i] = factorial[i-1]*i;
     }
-    for(const auto& [key, val] : factorial) {    
-        std::cout << key << ' ' << val << '\n' ;
+    for(const auto& f : factorial) {    
+        std::cout << f.first << ' ' << f.second << '\n' ;
     }
     return 0;
 }
